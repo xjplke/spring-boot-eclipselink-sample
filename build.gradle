@@ -1,0 +1,64 @@
+buildscript {
+    ext {
+	    springBootVersion = '1.1.6.RELEASE'
+    }
+    repositories {
+    	mavenLocal()
+    	mavenCentral()
+    	//maven { url "http://maven.oschina.net/content/groups/public/"}
+    }
+    dependencies {
+         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+allprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+springBoot {
+    mainClass = "sample.data.jpa.SampleDataJpaApplication"
+}
+
+
+
+jar {
+    baseName = 'eclipselink-sample'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    //maven { url "http://maven.oschina.net/content/groups/public/" }
+}
+
+bootRun{
+	jvmArgs '-javaagent:/Users/shaojunwu/.m2/repository/org/springframework/spring-instrument/4.0.7.RELEASE/spring-instrument-4.0.7.RELEASE.jar'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"){
+        exclude module:"hibernate-entitymanager" 
+    }
+    compile("org.eclipse.persistence:eclipselink:2.5.2") 
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}") 
+    compile('org.hsqldb:hsqldb:2.0.0')
+    
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    runtime("org.springframework:spring-instrument:4.1.1.RELEASE")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
